@@ -17,11 +17,6 @@ class JobController extends Controller
         ]);
     }
 
-    public function create()
-    {
-        return view('jobs.create');
-    }
-
     public function show(Job $job)
     {
         return view('jobs.show', ['job' => $job]);
@@ -40,11 +35,16 @@ class JobController extends Controller
             'employer_id' => 1
         ]);
 
-        Mail::to($job->employer->user)->send(
+        Mail::to($job->employer->user)->queue(
             new JobPosted($job)
         );
 
         return redirect('/jobs');
+    }
+
+    public function create()
+    {
+        return view('jobs.create');
     }
 
     public function edit(Job $job)
